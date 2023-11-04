@@ -3,8 +3,8 @@
 version = "1.0.0"
 
 # The title and description fields are primarily for displaying extension info in UI
-title = "Hello World!"
-description = "Test"
+title = "OmniBIM"
+description = "OmniBIM is an open, collaborative, cloud-based BIM platform built on top of USD."
 
 # Path (relative to the root) or content of readme markdown file for UI.
 readme  = "docs/README.md"
@@ -34,7 +34,7 @@ preview_image = "data/preview.png"
 
 # Main python module this extension provides, it will be publicly available as "import omni.hello.world".
 [[python.module]]
-name = "omni.hello.world"
+name = "main"
 
 [[test]]
 # Extra dependencies only to be used during test run
