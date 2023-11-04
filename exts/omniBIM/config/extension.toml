@@ -38,6 +38,4 @@ name = "main"
 
 [[test]]
 # Extra dependencies only to be used during test run
-dependencies = [
-    "omni.kit.ui_test" # UI testing extension
-]
+dependencies = []

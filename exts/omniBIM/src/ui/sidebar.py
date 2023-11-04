@@ -1,5 +1,7 @@
 from pxr import Usd, Sdf
 from omni.ui import window, Workspace, Model, ValueModel, scene as ui_scene, Color
+from Models.element import Element 
+from Models.project import Project  
 
 # Create a model for the UI to interact with
 class BIMDataModel(Model):
@@ -43,12 +45,24 @@ class BIMSidebar:
                 ui_scene.Button("Create Project", clicked_fn=self.create_project)
 
     def create_element(self):
-        # Logic to create a new Element in the USD stage
-        # ...
+        # Generate a unique path for the new element
+        element_path = Sdf.Path(f'/MyProject/Element_{len(self.stage.GetPrimAtPath("/MyProject").GetChildren()) + 1}')
+        # Create a new Element in the USD stage
+        element = Element(self.stage, element_path)
+        element.SetCost(self.model.element_cost.value)
+        element.SetManufacturer(self.model.element_manufacturer.value)
+        # Save changes
+        self.stage.GetRootLayer().Save()
 
     def create_project(self):
-        # Logic to create a new Project in the USD stage
-        # ...
+        # Generate a unique path for the new project
+        project_path = Sdf.Path(f'/MyProject/Project_{len(self.stage.GetPseudoRoot().GetChildren()) + 1}')
+        # Create a new Project in the USD stage
+        project = Project(self.stage, project_path)
+        project.SetName(self.model.project_name.value)
+        project.SetAddress(self.model.project_address.value)
+        # Save changes
+        self.stage.GetRootLayer().Save()
 
 # Create the sidebar
 bim_sidebar = BIMSidebar(bim_data_model)
