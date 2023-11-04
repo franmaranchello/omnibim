@@ -19,14 +19,21 @@ class MyExtension(omni.ext.IExt):
 
         self._count = 0
 
-        self._window = ui.Window("My Window", width=300, height=300)
+        self._window = ui.Window("My Window", width=300, height=800)
         with self._window.frame:
             with ui.VStack():
-                label = ui.Label("")
                 
+                IMAGE = "C:/repos/omnibim/exts/omni.hello.world/data/icon_new.png"
+                ui.Image(IMAGE, width=64, height=64)
 
-                def on_click():
+                label = ui.Label("", height=50)
+
+                def add_click():
                     self._count += 1
+                    label.text = f"count: {self._count}"
+                
+                def sub_click():
+                    self._count -= 1
                     label.text = f"count: {self._count}"
 
                 def on_click10():
@@ -35,29 +42,113 @@ class MyExtension(omni.ext.IExt):
 
                 def on_reset():
                     self._count = 0
-                    label.text = "empty"
+                    label.text = f"count: {self._count}"
 
                 on_reset()
-                
-                style1 = {
-                    "Button":{
-                        "border_width": 0.5,
-                        "border_radius": 1
-                    },
-                }
-
-
-                with ui.HStack():
-                    ui.Button("Add", clicked_fn=on_click)
-                    ui.Button("Add10", clicked_fn=on_click10)
+            
+                with ui.HStack(height=50):
+                    ui.Button("+", clicked_fn=add_click)
+                    ui.Button("-", clicked_fn=sub_click)
                     ui.Button("Reset", clicked_fn=on_reset)
-                    ui.Button("+")
                 
-                with ui.VStack(style=style1):
+                # ------------------------
+
+                ui.Label("SPAWN", height=50)
+                with ui.VStack(height=100):
+                    ui.Button("One")
                     ui.Button("Two")
                     ui.Button("Three")
-                    ui.Button("Four")
-                    ui.Button("Four")
+
+                # ------------------------
+                
+                ui.Label("TRANSFORM", height=50)
+
+
+                def slider_row(label, slider_width, slider_gap):
+                    with ui.HStack(height=30):
+                        ui.Label(f"{label}")
+                        # x
+                        ui.FloatDrag(width=slider_width)
+                        ui.Label("", width=slider_gap)
+                        # y
+                        ui.FloatDrag(width=slider_width)
+                        ui.Label("", width=slider_gap)
+                        # z
+                        ui.FloatDrag(width=slider_width)
+                        ui.Label("", width=slider_gap)
+                
+                slider_width = 60
+                slider_gap = 5
+
+                slider_row("Translate", slider_width, slider_gap)
+                slider_row("Rotate", slider_width, slider_gap)
+                slider_row("Scale", slider_width, slider_gap)
+            
+                # ------------------------
+
+                ui.Label("ELEMENT NAV", height=50)
+                class Item(ui.AbstractItem):
+                    def __init__(self, text, name, d=5):
+                        super().__init__()
+                        self.name_model = ui.SimpleStringModel(text)
+                        self.children = [Item(f"Child {name}{i}", name, d - 1) for i in range(d)]
+
+                class Model(ui.AbstractItemModel):
+                    def __init__(self, name):
+                        super().__init__()
+                        self._children = [Item(f"Model {name}", name)]
+
+                    def get_item_children(self, item):
+                        return item.children if item else self._children
+
+                    def get_item_value_model_count(self, item):
+                        return 1
+
+                    def get_item_value_model(self, item, column_id):
+                        return item.name_model
+
+                class NestedItem(ui.AbstractItem):
+                    def __init__(self, source_item, source_model):
+                        super().__init__()
+                        self.source = source_item
+                        self.model = source_model
+                        self.children = None
+
+                class NestedModel(ui.AbstractItemModel):
+                    def __init__(self):
+                        super().__init__()
+                        models = [Model("A"), Model("B"), Model("C")]
+                        self.children = [
+                            NestedItem(i, m) for m in models for i in m.get_item_children(None)]
+
+                    def get_item_children(self, item):
+                        if item is None:
+                            return self.children
+
+                        if item.children is None:
+                            m = item.model
+                            item.children = [
+                                NestedItem(i, m) for i in m.get_item_children(item.source)]
+
+                        return item.children
+
+                    def get_item_value_model_count(self, item):
+                        return 1
+
+                    def get_item_value_model(self, item, column_id):
+                        return item.model.get_item_value_model(item.source, column_id)
+
+                with ui.ScrollingFrame(
+                    height=200,
+                    horizontal_scrollbar_policy=ui.ScrollBarPolicy.SCROLLBAR_ALWAYS_OFF,
+                    vertical_scrollbar_policy=ui.ScrollBarPolicy.SCROLLBAR_ALWAYS_ON,
+                    style_type_name_override="TreeView",
+                ):
+                    self._model = NestedModel()
+                    ui.TreeView(self._model, root_visible=False, style={"margin": 0.5})
+
+                
+                    
 
     def on_shutdown(self):
         print("[omni.hello.world] MyExtension shutdown")
