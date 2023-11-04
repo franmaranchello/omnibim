@@ -154,7 +154,7 @@ if [ ! -d "$PM_7za_PATH" ]; then
 fi
 
 # Generate temporary file name for environment variables:
-PM_VAR_PATH=`mktemp -u -t tmp.$$.pmvars.XXXXXX`
+PM_VAR_PATH=`mktemp -u -t tmp.$.pmvars.XXXXXX`
 
 if [ $# -ne 0 ]
   then

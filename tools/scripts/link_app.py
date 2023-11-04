@@ -1,7 +1,8 @@
-import os
 import argparse
-import sys
 import json
+import os
+import sys
+
 import packmanapi
 import urllib3
 

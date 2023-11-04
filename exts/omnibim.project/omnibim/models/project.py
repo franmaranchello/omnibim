@@ -1,10 +1,10 @@
-class Project(UsdGeom.Xform):
+class Project():
     """ A custom USD schema for a BIM project. """
     
     def __init__(self, stage, path):
         super().__init__(stage.DefinePrim(path, 'Project'))
-        self.nameAttr = self.GetPrim().CreateAttribute('name', Sdf.ValueTypeNames.String, True)
-        self.addressAttr = self.GetPrim().CreateAttribute('address', Sdf.ValueTypeNames.String, True)
+        self.nameAttr = self.GetPrim().CreateAttribute('name')
+        self.addressAttr = self.GetPrim().CreateAttribute('address')
 
     def SetName(self, name):
         self.nameAttr.Set(name)

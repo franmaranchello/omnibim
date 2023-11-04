@@ -1,12 +1,10 @@
-from pxr import Usd, UsdGeom, Sdf
-
-class Element(UsdGeom.Xform):
+class Element():
     """ A custom USD schema for a BIM element. """
     
     def __init__(self, stage, path):
         super().__init__(stage.DefinePrim(path, 'Element'))
-        self.costAttr = self.GetPrim().CreateAttribute('cost', Sdf.ValueTypeNames.Float, True)
-        self.manufacturerAttr = self.GetPrim().CreateAttribute('manufacturer', Sdf.ValueTypeNames.String, True)
+        self.costAttr = self.GetPrim().CreateAttribute('cost')
+        self.manufacturerAttr = self.GetPrim().CreateAttribute('manufacturer')
 
     def SetCost(self, cost):
         self.costAttr.Set(cost)
