@@ -37,7 +37,6 @@ class MyExtension(omni.ext.IExt):
 
                 with ui.HStack():
                     ui.Button("Add", clicked_fn=on_click)
-                    ui.Button("Add", clicked_fn=on_click)
                     ui.Button("Reset", clicked_fn=on_reset)
 
     def on_shutdown(self):
