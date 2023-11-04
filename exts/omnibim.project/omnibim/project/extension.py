@@ -1,6 +1,7 @@
 import omni.ext
 import omni.ui as ui
 import omni.kit.commands
+from project import ProjectModel
 
 
 # Functions and vars are available to other extension as usual in python: `example.python_ext.some_public_function(x)`
@@ -17,7 +18,8 @@ class OmnibimProjectExtension(omni.ext.IExt):
     # this extension is located on filesystem.
     def on_startup(self, ext_id):
         print("[omnibim.project] omnibim project startup")
-
+        # Create a global instance of the project model
+        project_model = ProjectModel()
         self._count = 0
 
         self._window = ui.Window("OmniBIM", width=300, height=300)
@@ -27,10 +29,7 @@ class OmnibimProjectExtension(omni.ext.IExt):
 
 
                 def on_click():
-                    print("Creating cube!")
-                    omni.kit.commands.execute('CreatePrimWithDefaultXform',
-                        prim_type='Cube',
-                        attributes={'size': 100.0, 'extent': [(-50.0, -50.0, -50.0), (50.0, 50.0, 50.0)]})
+                    project_model.edit_project_parameters()
 
 
                 def on_reset():
