@@ -29,6 +29,10 @@ class MyExtension(omni.ext.IExt):
                     self._count += 1
                     label.text = f"count: {self._count}"
 
+                def on_click10():
+                    self._count += 10
+                    label.text = f"count: {self._count}"
+
                 def on_reset():
                     self._count = 0
                     label.text = "empty"
@@ -37,6 +41,7 @@ class MyExtension(omni.ext.IExt):
 
                 with ui.HStack():
                     ui.Button("Add", clicked_fn=on_click)
+                    ui.Button("Add10", clicked_fn=on_click10)
                     ui.Button("Reset", clicked_fn=on_reset)
 
     def on_shutdown(self):
