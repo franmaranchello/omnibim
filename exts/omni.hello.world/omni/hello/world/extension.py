@@ -34,10 +34,25 @@ class MyExtension(omni.ext.IExt):
                     label.text = "empty"
 
                 on_reset()
+                
+                style1 = {
+                    "Button":{
+                        "border_width": 0.5,
+                        "border_radius": 1
+                    },
+                }
+
 
                 with ui.HStack():
                     ui.Button("Add", clicked_fn=on_click)
                     ui.Button("Reset", clicked_fn=on_reset)
+                    ui.Button("+")
+                
+                with ui.VStack(style=style1):
+                    ui.Button("Two")
+                    ui.Button("Three")
+                    ui.Button("Four")
+                    ui.Button("Four")
 
     def on_shutdown(self):
         print("[omni.hello.world] MyExtension shutdown")
